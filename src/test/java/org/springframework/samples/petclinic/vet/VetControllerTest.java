@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.vet;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -9,17 +10,17 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
 
-@ExtendWith(MockitoExtension.class)
+@RunWith(MockitoJUnitRunner.class)
 public class VetControllerTest {
 
 	@Mock
@@ -38,6 +39,8 @@ public class VetControllerTest {
 		when(vetRepository.findAll(any(Pageable.class))).thenReturn(pageResult);
 
 		vetController.showVetList(pageSize, model);
+
+		verify(vetRepository, times(1)).findAll(any(Pageable.class));
 	}
 
 	private Page<Vet> buildPage(final int pageNumber, final int pageSize) {
