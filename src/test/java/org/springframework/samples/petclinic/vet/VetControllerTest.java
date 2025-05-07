@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.vet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -38,9 +40,20 @@ public class VetControllerTest {
 
 		when(vetRepository.findAll(any(Pageable.class))).thenReturn(pageResult);
 
-		vetController.showVetList(pageSize, model);
+		final String pageForm = vetController.showVetList(pageSize, model);
+
+		assertEquals("vets/vetList", pageForm);
+		assertEquals("1", model.getAttribute("currentPage"));
+		assertEquals("1", model.getAttribute("totalPages"));
+		assertEquals("1", model.getAttribute("totalItems"));
+		assertNotNull(model.getAttribute("listVets"));
 
 		verify(vetRepository, times(1)).findAll(any(Pageable.class));
+	}
+
+	@Test
+	public void showResourcesVetList() {
+
 	}
 
 	private Page<Vet> buildPage(final int pageNumber, final int pageSize) {
