@@ -43,8 +43,8 @@ class VetControllerTests {
 			.andExpect(status().isOk())
 			.andExpect(view().name("vets/vetList"))
 			.andExpect(model().attribute("currentPage", 1))
-			.andExpect(model().attribute("totalPages", 1))
-			.andExpect(model().attribute("totalItems", 1))
+			.andExpect(model().attribute("totalPages", 2))
+			.andExpect(model().attribute("totalItems", 6L))
 			.andExpect(model().attributeExists("listVets"));
 	}
 
