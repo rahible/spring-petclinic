@@ -34,7 +34,7 @@ class VetControllerTests {
 	private VetRepository vetRepository;
 
 	@Test
-	void showResourcesVetList() throws Exception {
+	void showVetList() throws Exception {
 		final int page = 1;
 		final int pageSize = 5;
 		final Page<Vet> pageResult = buildPage(page, pageSize);
@@ -46,6 +46,16 @@ class VetControllerTests {
 			.andExpect(model().attribute("totalPages", 2))
 			.andExpect(model().attribute("totalItems", 6L))
 			.andExpect(model().attributeExists("listVets"));
+	}
+
+	@Test
+	void showResourcesVetList() throws Exception {
+		final int page = 1;
+		final int pageSize = 5;
+		final Page<Vet> pageResult = buildPage(page, pageSize);
+		when(vetRepository.findAll(any(Pageable.class))).thenReturn(pageResult);
+		mockMvc.perform(get("/vets"))
+			.andExpect(status().isOk());
 	}
 
 	private Page<Vet> buildPage(final int pageNumber, final int pageSize) {
