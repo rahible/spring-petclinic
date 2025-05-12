@@ -25,45 +25,47 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(VetController.class)
 class VetControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockitoBean
-    private VetRepository vetRepository;
+	@MockitoBean
+	private VetRepository vetRepository;
 
-    private List<Vet> vets;
-    private Page<Vet> vetPage;
+	private List<Vet> vets;
 
-    @BeforeEach
-    void setup() {
-        Vet vet = new Vet();
-        vet.setFirstName("John");
-        vet.setLastName("Doe");
-        vets = Collections.singletonList(vet);
-        vetPage = new PageImpl<>(vets, PageRequest.of(0, 5), 1);
-    }
+	private Page<Vet> vetPage;
 
-    @Test
-    void testShowVetList() throws Exception {
-        when(vetRepository.findAll(Mockito.any(Pageable.class))).thenReturn(vetPage);
+	@BeforeEach
+	void setup() {
+		Vet vet = new Vet();
+		vet.setFirstName("John");
+		vet.setLastName("Doe");
+		vets = Collections.singletonList(vet);
+		vetPage = new PageImpl<>(vets, PageRequest.of(0, 5), 1);
+	}
 
-        mockMvc.perform(get("/vets.html"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("vets/vetList"))
-                .andExpect(model().attributeExists("currentPage"))
-                .andExpect(model().attributeExists("totalPages"))
-                .andExpect(model().attributeExists("totalItems"))
-                .andExpect(model().attributeExists("listVets"))
-                .andExpect(model().attribute("listVets", vets));
-    }
+	@Test
+	void testShowVetList() throws Exception {
+		when(vetRepository.findAll(Mockito.any(Pageable.class))).thenReturn(vetPage);
 
-    @Test
-    void testShowResourcesVetList() throws Exception {
-        when(vetRepository.findAll()).thenReturn(vets);
+		mockMvc.perform(get("/vets.html"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("vets/vetList"))
+			.andExpect(model().attributeExists("currentPage"))
+			.andExpect(model().attributeExists("totalPages"))
+			.andExpect(model().attributeExists("totalItems"))
+			.andExpect(model().attributeExists("listVets"))
+			.andExpect(model().attribute("listVets", vets));
+	}
 
-        mockMvc.perform(get("/vets"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.vetList[0].firstName").value("John"))
-                .andExpect(jsonPath("$.vetList[0].lastName").value("Doe"));
-    }
+	@Test
+	void testShowResourcesVetList() throws Exception {
+		when(vetRepository.findAll()).thenReturn(vets);
+
+		mockMvc.perform(get("/vets"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.vetList[0].firstName").value("John"))
+			.andExpect(jsonPath("$.vetList[0].lastName").value("Doe"));
+	}
+
 }

@@ -12,13 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class OwnerRepositoryTest {
 
-    @Autowired
-    OwnerRepository ownerRepository;
+	@Autowired
+	OwnerRepository ownerRepository;
 
-    @Test
-    void testFindAll() {
-        List<Owner> owners = ownerRepository.findAll();
-        assertNotNull(owners);
-        assertEquals(10, owners.size());
-    }
+	@Test
+	void testFindAll() {
+		List<Owner> owners = ownerRepository.findAll();
+		assertNotNull(owners);
+		assertEquals(10, owners.size());
+	}
+
 }
