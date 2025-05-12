@@ -1,30 +1,56 @@
 <html xmlns:th="https://www.thymeleaf.org"
-  th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
+      th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
 
 <body>
 
-  <h2>Owner</h2>
-  <form th:object="${owner}" class="form-horizontal" id="add-owner-form" method="post">
-    <div class="form-group has-feedback">
-      <input
-        th:replace="~{fragments/inputField :: input ('First Name', 'firstName', 'text')}" />
-      <input
-        th:replace="~{fragments/inputField :: input ('Last Name', 'lastName', 'text')}" />
-      <input
-        th:replace="~{fragments/inputField :: input ('Address', 'address', 'text')}" />
-      <input
-        th:replace="~{fragments/inputField :: input ('City', 'city', 'text')}" />
-      <input
-        th:replace="~{fragments/inputField :: input ('Telephone', 'telephone', 'text')}" />
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button
-          th:with="text=${owner['new']} ? 'Add Owner' : 'Update Owner'"
-          class="btn btn-primary" type="submit" th:text="${text}">Add
-          Owner</button>
+<h2>Owner</h2>
+<form th:object="${owner}" class="form-horizontal" id="add-owner-form" method="post">
+  <div class="form-group has-feedback">
+    <input
+      th:replace="~{fragments/inputField :: input ('First Name', 'firstName', 'text')}"/>
+    <input
+      th:replace="~{fragments/inputField :: input ('Last Name', 'lastName', 'text')}"/>
+    <input
+      th:replace="~{fragments/inputField :: input ('Address', 'address', 'text')}"/>
+    <input
+      th:replace="~{fragments/inputField :: input ('City', 'city', 'text')}"/>
+    <input
+      th:replace="~{fragments/inputField :: input ('Telephone', 'telephone', 'text')}"/>
+  </div>
+  <div class="form-group">
+    <div class="modal fade" id="cancelConfirmationModal" tabindex="-1" role="dialog"
+         aria-labelledby="cancelConfirmationModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancelConfirmationModalLabel">Confirm Cancel</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to lose your changes?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <a id="confirmCancel" class="btn btn-primary">Confirm</a>
+          </div>
+        </div>
       </div>
     </div>
-  </form>
+
+    <script>
+      document.getElementById('confirmCancel').onclick = function () {
+        window.location.href = '/owners/[[${owner.id}]]';
+      };
+    </script>
+    <button
+      th:with="text=${owner['new']} ? 'Add Owner' : 'Update Owner'"
+      class="btn btn-primary" type="submit" th:text="${text}">Add
+      Owner
+    </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cancelConfirmationModal">Cancel</button>
+  </div>
+</form>
 </body>
 </html>
