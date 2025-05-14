@@ -12,11 +12,12 @@ import java.util.Collection;
 public interface VetRepository extends Repository<Vet, Integer> {
 
 	@Transactional(readOnly = true)
-	@Cacheable("vets")
 	Collection<Vet> findAll() throws DataAccessException;
 
 	@Transactional(readOnly = true)
-	@Cacheable("vets")
 	Page<Vet> findAll(Pageable pageable) throws DataAccessException;
+
+	@Transactional
+	Vet save(Vet vet) throws DataAccessException;
 
 }
