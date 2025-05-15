@@ -21,6 +21,9 @@ import org.springframework.web.servlet.ModelAndView;
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Exposes the apis for the Owner domain.
+ */
 @Controller
 class OwnerController {
 
@@ -32,11 +35,20 @@ class OwnerController {
 		this.owners = owners;
 	}
 
+	/**
+	 * Makes sure that the id field cannot be passed in as part of the request.
+	 * @param dataBinder
+	 */
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setDisallowedFields("id");
 	}
 
+	/**
+	 * Finds an owner based on the ownerId
+	 * @param ownerId
+	 * @return
+	 */
 	@ModelAttribute("owner")
 	public Owner findOwner(@PathVariable(name = "ownerId", required = false) Integer ownerId) {
 		return ownerId == null ? new Owner()
@@ -45,11 +57,22 @@ class OwnerController {
 							+ ". Please ensure the ID is correct " + "and the owner exists in the database."));
 	}
 
+	/**
+	 * Returns a new form
+	 * @return
+	 */
 	@GetMapping("/owners/new")
 	public String initCreationForm() {
 		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
 
+	/**
+	 * Validates the Owner model and either returns and error on an invalid object or saves a valid object to the database.
+	 * @param owner
+	 * @param result
+	 * @param redirectAttributes
+	 * @return
+	 */
 	@PostMapping("/owners/new")
 	public String processCreationForm(@Valid Owner owner, BindingResult result, RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
@@ -62,11 +85,24 @@ class OwnerController {
 		return "redirect:/owners/" + owner.getId();
 	}
 
+	/**
+	 * Returns the initial findOwners form.
+	 * @return
+	 */
 	@GetMapping("/owners/find")
 	public String initFindForm() {
 		return "owners/findOwners";
 	}
 
+	/**
+	 * Creates a paged list of Owners based on the page and pagesize requested. Returns the view for displaying the list of Owners.
+	 *
+	 * @param page
+	 * @param owner
+	 * @param result
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/owners")
 	public String processFindForm(@RequestParam(defaultValue = "1") int page, Owner owner, BindingResult result,
 			Model model) {
@@ -103,11 +139,23 @@ class OwnerController {
 		return owners.findByLastNameStartingWith(lastname, pageable);
 	}
 
+	/**
+	 * Returns the initialized update form.
+	 * @return
+	 */
 	@GetMapping("/owners/{ownerId}/edit")
 	public String initUpdateOwnerForm() {
 		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
 
+	/**
+	 * Validates the Owner model and either saves the valid model to the database and returns a display form or returns validation error messages.
+	 * @param owner
+	 * @param result
+	 * @param ownerId
+	 * @param redirectAttributes
+	 * @return
+	 */
 	@PostMapping("/owners/{ownerId}/edit")
 	public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, @PathVariable("ownerId") int ownerId,
 			RedirectAttributes redirectAttributes) {
@@ -128,6 +176,11 @@ class OwnerController {
 		return "redirect:/owners/{ownerId}";
 	}
 
+	/**
+	 * Returns a view of the Owner model based on the ownerId path variable.
+	 * @param ownerId
+	 * @return
+	 */
 	@GetMapping("/owners/{ownerId}")
 	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
